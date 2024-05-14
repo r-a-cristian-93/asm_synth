@@ -377,17 +377,16 @@ void sineWave()
 
 	asm volatile
 	(
-		"ldi r24, lo8(sine_table)\n"
-		"ldi r25, hi8(sine_table)\n"
-		"add r24, r21\n"
-		"adc r25, __zero_reg__\n"
-		"lpm r22, Z\n"
+		// read address of sine_table
+        "ldi r26, lo8(pm(sine_table))\n"
+        "ldi r27, hi8(pm(sine_table))\n"
+		// increment address by phase
+        "add r26, r23\n"
+        "adc r27, __zero_reg__\n"
+		// store value in r24
+        "ld r24, X\n"
 
-		"sbrs r23, 7\n"
-		"com r22\n"
-		"lsl r22\n"
-		"mulsu r22, r23\n"
-
+        "mul r24, r21\n"
 		"add r20, r1\n"
 	);
 }
