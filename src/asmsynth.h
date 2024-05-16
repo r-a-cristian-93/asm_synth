@@ -1,8 +1,7 @@
 #ifndef MusicSynthesizer_h
 #define MusicSynthesizer_h
 #include <config.h>
-
-
+#include <avr/io.h>
 
 //12-TET, in tune: a4=440hz
 #define TUNE 440 //in hz

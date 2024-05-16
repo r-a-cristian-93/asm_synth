@@ -1,7 +1,6 @@
 #include <config.h>
 
-
-//zmienne
+// variables
 .extern sTime
 
 #ifndef disable_secondProgram
@@ -20,19 +19,22 @@
 	#endif
 #endif
 
-
+.EQU GTCCR, 0x23
+.EQU TCCR0B, 0x25
+.EQU TCCR0A, 0x24
+.EQU TCNT0, 0x26
 
 .global synthSetup
 synthSetup:
-ldi r25, 131
-out 0x23, r25//GTCCR
+ldi r25, 0b10000011				// Loads an 8-bit constant directly to register 16 to 31
+out GTCCR, r25					// Sets GTCCR. Synchronize timers. Reset prescalers
 #ifdef timer0
-	ldi r25, 1
-	out 0x25, r25//TCCR0B
-	ldi r25, 163
-	out 0x24, r25//TCCR0A
-	clr r25
-	out 0x26, r25//TCNT0
+	ldi r25, 1					// Loads an 8-bit constant directly to register 16 to 31
+	out TCCR0B, r25				// Sets CSS0 to 1. No prescaleer
+	ldi r25, 0b10100011			// Loads an 8-bit constant directly to register 16 to 31
+	out TCCR0A, r25				// Clear OC0A on compare match. Clear OC0B on compare match. Fast PWM
+	clr r25						// This will clear all bits in the register
+	out TCNT0, r25				// Reset register
 #endif
 #ifdef timer1
 	ldi r25, 9
@@ -52,7 +54,7 @@ out 0x23, r25//GTCCR
 	sts 0xB2, r25//TCNT2
 #endif
 clr r25
-out 0x23, r25//GTCCR
+out GTCCR, r25					// Starts timers. Prescalers continue from current state.
 //DDRD
 #ifdef sPin2
 	sbi 0x0A, 2
